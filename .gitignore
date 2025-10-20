@@ -1,0 +1,54 @@
+# Entorno virtual
+venv/
+ENV/
+env/
+
+# Archivos temporales de Python
+_pycache_/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Configuración local / sensible
+.env
+*.env
+.env.*
+.env.local
+
+# Archivos de testing
+.coverage
+pytest_cache/
+htmlcov/
+.tox/
+.nox/
+
+# Logs y reportes
+*.log
+*.out
+*.err
+
+# IDE / Editor (VS Code, Cursor, PyCharm, etc.)
+.vscode/
+.cursor/
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Archivos del sistema (Windows / macOS / Linux)
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Compilados / empaquetados
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Seguridad
+secrets.json
