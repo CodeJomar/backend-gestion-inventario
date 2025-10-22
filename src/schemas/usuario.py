@@ -1,7 +1,9 @@
-from pydantic import BaseModel, validator
+from typing import Annotated
+from pydantic import BaseModel, EmailStr, Field, validator
 import re
 
 class UsuarioBase(BaseModel):
+    email: EmailStr
     nombres: str
     apellidos: str
     usuario: str
@@ -42,12 +44,24 @@ class UsuarioBase(BaseModel):
             raise ValueError("El rol debe ser 'Admin' o 'Empleado'.")
         return v
 
+
+# 👇 Aquí está el cambio importante 👇
 class UsuarioCreate(UsuarioBase):
-    email: str
-    password: str
+    password: Annotated[str, Field(min_length=8, max_length=30, strip_whitespace=True)]
+
+
+class UsuarioUpdate(BaseModel):
+    nombres: str | None = None
+    apellidos: str | None = None
+    usuario: str | None = None
+    celular: str | None = None
+    dni: str | None = None
+    rol: str | None = None
+    actualizado_por: str | None = None
+
 
 class UsuarioOut(UsuarioBase):
     id: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # reemplaza orm_mode en Pydantic v2

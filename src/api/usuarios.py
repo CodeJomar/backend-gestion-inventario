@@ -1,30 +1,46 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, HTTPException
+from src.schemas.usuario import UsuarioCreate, UsuarioUpdate
 from src.services import usuarios_service
-from src.schemas.usuario import UsuarioCreate, UsuarioOut
-from src.auth.dependencies import require_admin, get_current_user
 
 router = APIRouter()
 
-@router.get("/", response_model=list[UsuarioOut], dependencies=[Depends(require_admin)])
+@router.post("/")
+def crear_usuario(usuario: UsuarioCreate):
+    try:
+        nuevo_usuario = usuarios_service.crear_usuario(usuario.dict())
+        return nuevo_usuario
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/")
 def listar_usuarios():
-    return usuarios_service.listar_usuarios()
+    try:
+        return usuarios_service.listar_usuarios()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/{user_id}", response_model=UsuarioOut, dependencies=[Depends(require_admin)])
-def obtener_usuario(user_id: str):
-    return usuarios_service.obtener_usuario(user_id)
 
-@router.post("/", dependencies=[Depends(require_admin)])
-def crear_usuario(perfil: UsuarioCreate, current_user=Depends(get_current_user)):
-    perfil_data = perfil.dict()
-    perfil_data["creado_por"] = current_user["id"]
-    return usuarios_service.crear_usuario(perfil_data)
+@router.get("/{usuario_id}")
+def obtener_usuario(usuario_id: str):
+    usuario = usuarios_service.obtener_usuario(usuario_id)
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return usuario
 
-@router.put("/{user_id}", dependencies=[Depends(require_admin)])
-def actualizar_usuario(user_id: str, perfil: UsuarioCreate, current_user=Depends(get_current_user)):
-    perfil_data = perfil.dict(exclude_unset=True)
-    perfil_data["actualizado_por"] = current_user["id"]
-    return usuarios_service.actualizar_usuario(user_id, perfil_data)
 
-@router.delete("/{user_id}", dependencies=[Depends(require_admin)])
-def eliminar_usuario(user_id: str, current_user=Depends(get_current_user)):
-    return usuarios_service.eliminar_usuario(user_id)
+@router.put("/{usuario_id}")
+def actualizar_usuario(usuario_id: str, usuario: UsuarioUpdate):
+    try:
+        actualizado = usuarios_service.actualizar_usuario(usuario_id, usuario.dict(exclude_unset=True))
+        return {"mensaje": "Usuario actualizado correctamente", "usuario": actualizado}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/{usuario_id}")
+def eliminar_usuario(usuario_id: str):
+    try:
+        return usuarios_service.eliminar_usuario(usuario_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
