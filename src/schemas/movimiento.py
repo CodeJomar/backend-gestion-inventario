@@ -10,41 +10,26 @@ class MovimientoBase(BaseModel):
     usuario: Optional[str] = Field(None, description="Usuario que realiza el movimiento")
     fecha: datetime = Field(default_factory=datetime.now)
 
-    # Campos derivados
-    dia: Optional[int] = None
-    mes: Optional[int] = None
-    anio: Optional[int] = None
-    hora: Optional[str] = None
-
-    @validator("motivo")
-    def validar_motivo_tipo_movimiento(cls, v, values):
-        """Valida coherencia entre motivo y tipo_movimiento."""
-        tipo = values.get("tipo_movimiento")
-
-        # Reglas de coherencia
-        if v == "venta" and tipo != "salida":
-            raise ValueError("El motivo 'venta' solo es válido para tipo_movimiento 'salida'.")
-        if v in ("devolución", "reposición", "ajuste") and tipo != "entrada":
-            raise ValueError(f"El motivo '{v}' solo es válido para tipo_movimiento 'entrada'.")
+    @validator("tipo_movimiento")
+    def validar_tipo_movimiento(cls, v):
+        if v not in ("entrada", "salida"):
+            raise ValueError("El tipo_movimiento debe ser 'entrada' o 'salida'.")
         return v
 
-    @validator("fecha", pre=True, always=True)
-    def establecer_fecha_y_derivados(cls, v, values):
-        """Genera automáticamente fecha, día, mes, año y hora."""
-        dt = v or datetime.now()
-        values["dia"] = dt.day
-        values["mes"] = dt.month
-        values["anio"] = dt.year
-        values["hora"] = dt.strftime("%H:%M:%S")
-        return dt
-
+    @validator("motivo")
+    def validar_motivo(cls, v, values):
+        tipo = values.get("tipo_movimiento")
+        motivos_validos = ("venta", "devolución", "reposición", "ajuste")
+        if v not in motivos_validos:
+            raise ValueError(f"Motivo inválido. Debe ser uno de: {motivos_validos}")
+        if v == "venta" and tipo != "salida":
+            raise ValueError("El motivo 'venta' solo es válido para tipo_movimiento 'salida'.")
+        if v in ("devolución", "reposición") and tipo != "entrada":
+            raise ValueError(f"El motivo '{v}' solo es válido para tipo_movimiento 'entrada'.")
+        return v
 
 class MovimientoCreate(MovimientoBase):
     pass
 
-
 class MovimientoOut(MovimientoBase):
     id: str
-
-    class Config:
-        orm_mode = True
