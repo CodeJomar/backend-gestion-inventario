@@ -1,17 +1,13 @@
 from src.db.supabase_client import supabase
 
+from src.db.supabase_client import supabase
+
 def crear_usuario(data: dict):
     email = data["email"]
     password = data["password"]
 
     # Crear usuario en Supabase Auth
-    response_auth = supabase.auth.admin.create_user(
-        {
-            "email": email,
-            "password": password,
-            "email_confirm": True
-        }
-    )
+    response_auth = supabase.auth.sign_up({"email": email, "password": password})
 
     if not response_auth.user:
         raise Exception("No se pudo crear el usuario en Supabase Auth")
@@ -28,11 +24,10 @@ def crear_usuario(data: dict):
         "celular": data["celular"],
         "dni": data["dni"],
         "rol": data["rol"],
-        "creado_por": data.get("creado_por")
+        "creado_por": data.get("creado_por"),
     }
 
     supabase.table("perfiles").insert(perfil_data).execute()
-
     return {"mensaje": "Usuario creado correctamente", "user_id": user_id}
 
 
