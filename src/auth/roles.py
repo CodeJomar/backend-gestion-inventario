@@ -1,4 +1,0 @@
-ADMIN = "Admin"
-EMPLEADO = "Empleado"
-
-ROLES_PERMITIDOS = [ADMIN, EMPLEADO]
