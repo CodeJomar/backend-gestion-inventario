@@ -10,7 +10,8 @@ class UsuarioBase(BaseModel):
     usuario: str
     celular: Optional[str] = None
     dni: Optional[str] = None
-    role_id: str
+    rol: Optional[str] = None
+    role_id: Optional[str] = None
     creado_por: Optional[str] = None
     actualizado_por: Optional[str] = None
     eliminado_por: Optional[str] = None
@@ -48,6 +49,7 @@ class UsuarioUpdate(BaseModel):
     usuario: Optional[str] = None
     celular: Optional[str] = None
     dni: Optional[str] = None
+    rol: Optional[str] = None
     role_id: Optional[str] = None
     actualizado_por: Optional[str] = None
 
