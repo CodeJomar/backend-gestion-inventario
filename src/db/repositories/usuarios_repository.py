@@ -1,7 +1,5 @@
 from src.db.supabase_client import supabase
 
-from src.db.supabase_client import supabase
-
 def crear_usuario(data: dict):
     email = data["email"]
     password = data["password"]
@@ -14,6 +12,18 @@ def crear_usuario(data: dict):
 
     user_id = response_auth.user.id
 
+    # Convertir rol (texto) a role_id (UUID)
+    role_name = data.get("rol")  # Obtener el nombre del rol del input
+    role_id = None
+    
+    if role_name:
+        # Buscar el role_id correspondiente al nombre del rol
+        role_response = supabase.table("roles").select("id").eq("name", role_name).single().execute()
+        if role_response.data:
+            role_id = role_response.data["id"]
+        else:
+            raise Exception(f"Rol '{role_name}' no encontrado en la base de datos")
+
     # Crear perfil asociado
     perfil_data = {
         "id": user_id,
@@ -23,7 +33,7 @@ def crear_usuario(data: dict):
         "usuario": data["usuario"],
         "celular": data["celular"],
         "dni": data["dni"],
-        "rol": data["rol"],
+        "role_id": role_id,  # Ahora usa el UUID del rol
         "creado_por": data.get("creado_por"),
     }
 
@@ -42,6 +52,16 @@ def obtener_usuario_por_id(usuario_id: str):
 
 
 def actualizar_usuario(usuario_id: str, data: dict):
+    # Si se está actualizando el rol, convertir nombre a ID
+    if "rol" in data:
+        role_name = data["rol"]
+        role_response = supabase.table("roles").select("id").eq("name", role_name).single().execute()
+        if role_response.data:
+            data["role_id"] = role_response.data["id"]
+            del data["rol"]  # Remover el campo 'rol' ya que usamos 'role_id'
+        else:
+            raise Exception(f"Rol '{role_name}' no encontrado en la base de datos")
+    
     response = supabase.table("perfiles").update(data).eq("id", usuario_id).execute()
     return response.data
 
