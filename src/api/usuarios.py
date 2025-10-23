@@ -1,11 +1,12 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from core.auth import CurrentUser, require_roles
 from src.schemas.usuario import UsuarioCreate, UsuarioUpdate
 from src.services import usuarios_service
 
 router = APIRouter()
 
 @router.post("/")
-def crear_usuario(usuario: UsuarioCreate):
+def crear_usuario(usuario: UsuarioCreate, current_user: CurrentUser = Depends(require_roles("Admin"))):
     try:
         nuevo_usuario = usuarios_service.crear_usuario(usuario.dict())
         return nuevo_usuario
