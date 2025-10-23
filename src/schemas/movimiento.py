@@ -31,5 +31,18 @@ class MovimientoBase(BaseModel):
 class MovimientoCreate(MovimientoBase):
     pass
 
+class MovimientoUpdate(BaseModel):
+    producto_id: Optional[str] = None
+    tipo_movimiento: Optional[Literal["entrada", "salida"]] = None
+    cantidad: Optional[int] = Field(None, gt=0)
+    motivo: Optional[Literal["venta", "devolución", "reposición", "ajuste"]] = None
+    usuario: Optional[str] = None
+    fecha: Optional[datetime] = None
+
 class MovimientoOut(MovimientoBase):
     id: str
+    created_at: datetime
+    modified_at: datetime
+
+    class Config:
+        from_attributes = True

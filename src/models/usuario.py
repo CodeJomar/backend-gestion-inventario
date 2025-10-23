@@ -1,5 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 class Usuario(BaseModel):
     id: str
@@ -7,12 +8,13 @@ class Usuario(BaseModel):
     nombres: str
     apellidos: str
     usuario: str
-    celular: str | None = None
-    dni: str | None = None
-    rol: str
-    creado_por: str | None = None
-    actualizado_por: str | None = None
-    eliminado_por: str | None = None
-    creado_en: datetime | None = None
-    actualizado_en: datetime | None = None
-    eliminado_en: datetime | None = None
+    celular: Optional[str] = None
+    dni: Optional[str] = None
+    role_id: str 
+    creado_por: Optional[str] = None
+    actualizado_por: Optional[str] = None
+    eliminado_por: Optional[str] = None
+    creado_en: Optional[datetime] = None
+    actualizado_en: Optional[datetime] = None
+    eliminado_en: Optional[datetime] = None
+    modified_at: Optional[datetime] = None

@@ -1,28 +1,29 @@
-from typing import Annotated
+from typing import Annotated, Optional
 from pydantic import BaseModel, EmailStr, Field, validator
 import re
+from datetime import datetime
 
 class UsuarioBase(BaseModel):
     email: EmailStr
     nombres: str
     apellidos: str
     usuario: str
-    celular: str | None = None
-    dni: str | None = None
-    rol: str
-    creado_por: str | None = None
-    actualizado_por: str | None = None
-    eliminado_por: str | None = None
+    celular: Optional[str] = None
+    dni: Optional[str] = None
+    role_id: str
+    creado_por: Optional[str] = None
+    actualizado_por: Optional[str] = None
+    eliminado_por: Optional[str] = None
 
     @validator("nombres", "apellidos")
     def validar_texto(cls, v):
-        if not re.match(r"^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$", v):
+        if v and not re.match(r"^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$", v):
             raise ValueError("El campo solo puede contener letras y espacios.")
-        return v.strip()
+        return v.strip() if v else v
 
     @validator("usuario")
     def validar_usuario(cls, v):
-        if not re.match(r"^[A-Za-z0-9]{1,10}$", v):
+        if v and not re.match(r"^[A-Za-z0-9]{1,10}$", v):
             raise ValueError("El usuario debe tener máximo 10 caracteres, sin espacios ni símbolos.")
         return v
 
@@ -38,30 +39,24 @@ class UsuarioBase(BaseModel):
             raise ValueError("El DNI debe tener 8 dígitos.")
         return v
 
-    @validator("rol")
-    def validar_rol(cls, v):
-        if v not in ("Admin", "Empleado"):
-            raise ValueError("El rol debe ser 'Admin' o 'Empleado'.")
-        return v
-
-
-# 👇 Aquí está el cambio importante 👇
 class UsuarioCreate(UsuarioBase):
     password: Annotated[str, Field(min_length=8, max_length=30, strip_whitespace=True)]
 
-
 class UsuarioUpdate(BaseModel):
-    nombres: str | None = None
-    apellidos: str | None = None
-    usuario: str | None = None
-    celular: str | None = None
-    dni: str | None = None
-    rol: str | None = None
-    actualizado_por: str | None = None
-
+    nombres: Optional[str] = None
+    apellidos: Optional[str] = None
+    usuario: Optional[str] = None
+    celular: Optional[str] = None
+    dni: Optional[str] = None
+    role_id: Optional[str] = None
+    actualizado_por: Optional[str] = None
 
 class UsuarioOut(UsuarioBase):
     id: str
+    creado_en: Optional[datetime] = None
+    actualizado_en: Optional[datetime] = None
+    eliminado_en: Optional[datetime] = None
+    modified_at: Optional[datetime] = None
 
     class Config:
-        from_attributes = True  # reemplaza orm_mode en Pydantic v2
+        from_attributes = True

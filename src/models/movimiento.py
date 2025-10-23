@@ -8,6 +8,8 @@ class Movimiento:
     producto_id: str
     tipo_movimiento: str  # entrada o salida
     cantidad: int
-    motivo: Optional[str] # venta, devolucion, reposición, ajuste.
-    usuario: Optional[str]
+    motivo: str  # venta, devolucion, reposición, ajuste
+    usuario: Optional[str] = None
     fecha: datetime
+    created_at: datetime
+    modified_at: datetime
