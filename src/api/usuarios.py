@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
-from core.auth import CurrentUser, require_roles
+from src.core.auth import CurrentUser, require_roles
 from src.schemas.usuario import UsuarioCreate, UsuarioUpdate
 from src.services import usuarios_service
 
-router = APIRouter()
+router = APIRouter(prefix="/usuarios", tags=["usuarios"])
 
 @router.post("/")
 def crear_usuario(usuario: UsuarioCreate, current_user: CurrentUser = Depends(require_roles("Admin"))):

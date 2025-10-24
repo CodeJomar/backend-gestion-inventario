@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from src.schemas.movimiento import MovimientoCreate, MovimientoOut
 from src.services import movimientos_service
 
-router = APIRouter()
+router = APIRouter(prefix="/movimientos", tags=["Movimientos"])
 
 @router.get("/", response_model=list[MovimientoOut])
 def listar_movimientos():

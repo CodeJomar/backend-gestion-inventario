@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from src.schemas.producto import ProductoCreate, ProductoUpdate
 from src.services import productos_service
 
-router = APIRouter()
+router = APIRouter(prefix="/productos", tags=["Productos"])
 
 # Listar todos los productos
 @router.get("/")
