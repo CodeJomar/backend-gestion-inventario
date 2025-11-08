@@ -39,6 +39,11 @@ def get_current_user(authorization: str | None = Header(default=None)) -> Curren
     # 2) Load profile
     perfil_res = supabase.table("perfiles").select("*").eq("id", user_id).single().execute()
     perfil = (perfil_res.data or {}) if hasattr(perfil_res, "data") else {}
+    
+    is_blocked = perfil.get("eliminado_por") != None
+    
+    if is_blocked:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User has been blocked")
 
     role_id = perfil.get("role_id")
     role_name: Optional[str] = None
