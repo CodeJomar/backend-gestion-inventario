@@ -4,8 +4,8 @@ def configurar_cors(app):
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[
-            "http://localhost:5173",  # React local
-            "http://127.0.0.1:5173",  # FastAPI local
+            "http://localhost:3000",  # React local
+            "http://127.0.0.1:3000",  # FastAPI local
         ],
         allow_credentials=True,
         allow_methods=["*"],

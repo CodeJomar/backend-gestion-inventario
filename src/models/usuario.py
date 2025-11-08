@@ -14,7 +14,7 @@ class Usuario(BaseModel):
     creado_por: Optional[str] = None
     actualizado_por: Optional[str] = None
     eliminado_por: Optional[str] = None
-    creado_en: Optional[datetime] = None
+    created_at: Optional[datetime] = None
     actualizado_en: Optional[datetime] = None
-    eliminado_en: Optional[datetime] = None
+    deleted_at: Optional[datetime] = None
     modified_at: Optional[datetime] = None

@@ -1,20 +1,16 @@
+import re
 from typing import Annotated, Optional
 from pydantic import BaseModel, EmailStr, Field, validator
-import re
 from datetime import datetime
 
 class UsuarioBase(BaseModel):
     email: EmailStr
-    nombres: str
-    apellidos: str
-    usuario: str
+    nombres: Optional[str] = None
+    apellidos: Optional[str] = None
+    usuario: Optional[str] = None
     celular: Optional[str] = None
     dni: Optional[str] = None
     rol: Optional[str] = None
-    role_id: Optional[str] = None
-    creado_por: Optional[str] = None
-    actualizado_por: Optional[str] = None
-    eliminado_por: Optional[str] = None
 
     @validator("nombres", "apellidos")
     def validar_texto(cls, v):
@@ -50,14 +46,13 @@ class UsuarioUpdate(BaseModel):
     celular: Optional[str] = None
     dni: Optional[str] = None
     rol: Optional[str] = None
-    role_id: Optional[str] = None
-    actualizado_por: Optional[str] = None
+    active: Optional[bool] = None
 
 class UsuarioOut(UsuarioBase):
     id: str
-    creado_en: Optional[datetime] = None
+    created_at: Optional[datetime] = None
     actualizado_en: Optional[datetime] = None
-    eliminado_en: Optional[datetime] = None
+    deleted_at: Optional[datetime] = None
     modified_at: Optional[datetime] = None
 
     class Config:
