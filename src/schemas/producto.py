@@ -33,6 +33,9 @@ class ProductoUpdate(BaseModel):
 
 class ProductoOut(ProductoBase):
     id: str
+    created_by: str
+    updated_by: str
+    modified_by: str
     created_at: datetime
     updated_at: datetime
     modified_at: datetime

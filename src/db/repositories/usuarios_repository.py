@@ -1,6 +1,6 @@
 import datetime
 from typing import Optional
-from schemas.usuario import UsuarioCreate
+from src.schemas.usuario import UsuarioCreate
 from src.db.supabase_client import supabase
 
 def crear_usuario(usuario: UsuarioCreate, creado_por: Optional[str] = None):

@@ -1,13 +1,32 @@
 from src.db.supabase_client import supabase
 from decimal import Decimal
 
+
+#def listar_productos():
+#    try:
+#        response = supabase.table("productos").select("*").eq("estado", True).order("created_at", desc=True).execute()
+#        return response.data
+#    except Exception as e:
+#        print(f"Error al listar productos: {e}")
+#        return []
+
 def listar_productos():
     try:
-        response = supabase.table("productos").select("*").order("created_at", desc=True).execute()
-        return response.data
+        activos = (
+            supabase.table("productos").select("*").eq("estado", True).order("created_at", desc=True).execute().data
+        )
+
+        inactivos = (
+            supabase.table("productos").select("*").eq("estado", False).order("created_at", desc=True).execute().data
+        )
+
+        return activos + inactivos
+        # Los productos deben tener un estado (no nulo) para que se muestren correctamente
+
     except Exception as e:
         print(f"Error al listar productos: {e}")
         return []
+
 
 def obtener_producto(id: str):
     try:
@@ -35,5 +54,8 @@ def crear_producto(data: dict):
 def actualizar_producto(id: str, data: dict):
     return supabase.table("productos").update(data).eq("id", id).execute().data
 
-def eliminar_producto(id: str):
-    return supabase.table("productos").delete().eq("id", id).execute().data
+def desactivar_producto(id: str):
+    return supabase.table("productos").update({"estado": False}).eq("id", id).execute().data
+
+def reactivar_producto(id: str):
+    return supabase.table("productos").update({"estado": True}).eq("id", id).execute().data

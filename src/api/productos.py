@@ -26,7 +26,12 @@ def actualizar_producto(id: str, prod: ProductoUpdate):
     data = prod.dict(exclude_unset=True)
     return productos_service.actualizar_producto(id, data)
 
-# Eliminar un producto
-@router.delete("/{id}")
-def eliminar_producto(id: str):
-    return productos_service.eliminar_producto(id)
+# Desactivar un producto
+@router.put("/{id}/desactivar")
+def desactivar_producto(id: str):
+    return productos_service.desactivar_producto(id)
+
+# Activar un producto
+@router.put("/{id}/activar")
+def activar_producto(id: str):
+    return productos_service.activar_producto(id)
