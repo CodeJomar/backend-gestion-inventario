@@ -7,7 +7,7 @@ class MovimientoBase(BaseModel):
     tipo_movimiento: Literal["entrada", "salida"]
     cantidad: int = Field(..., gt=0, description="Cantidad debe ser mayor a 0")
     motivo: Literal["venta", "devolución", "reposición", "ajuste"]
-    create_by: Optional[str] = Field(None, description="Usuario que realiza el movimiento")
+    created_by: Optional[str] = None
     fecha: datetime = Field(default_factory=datetime.now)
 
     @validator("tipo_movimiento")
@@ -36,7 +36,7 @@ class MovimientoUpdate(BaseModel):
     tipo_movimiento: Optional[Literal["entrada", "salida"]] = None
     cantidad: Optional[int] = Field(None, gt=0)
     motivo: Optional[Literal["venta", "devolución", "reposición", "ajuste"]] = None
-    create_by: Optional[str] = None
+    created_by: Optional[str] = None
     fecha: Optional[datetime] = None
 
 class MovimientoOut(MovimientoBase):

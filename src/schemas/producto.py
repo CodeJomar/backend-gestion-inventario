@@ -11,6 +11,7 @@ class ProductoBase(BaseModel):
     stock: int = Field(default=0, ge=0)
     tipo: Literal["electrodomestico", "accesorio", "consumible"] = "electrodomestico"
     imagen_url: Optional[str] = None
+    estado: bool = True
 
     @validator("tipo")
     def validar_tipo(cls, v):
@@ -30,6 +31,7 @@ class ProductoUpdate(BaseModel):
     stock: Optional[int] = Field(None, ge=0)
     tipo: Optional[Literal["electrodomestico", "accesorio", "consumible"]] = None
     imagen_url: Optional[str] = None
+    estado: bool
 
 class ProductoOut(ProductoBase):
     id: str
@@ -39,6 +41,6 @@ class ProductoOut(ProductoBase):
     created_at: datetime
     updated_at: datetime
     modified_at: datetime
-
+    estado: bool = False
     class Config:
         from_attributes = True

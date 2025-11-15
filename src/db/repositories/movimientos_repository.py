@@ -16,7 +16,5 @@ def crear_movimiento(data: dict):
     return response.data
 
 def listar_movimientos():
-    response = supabase.table("movimientos").select(
-        "*, perfiles:create_by(id, nombre, email)"
-    ).order("created_at", desc=True).execute()
+    response = supabase.table("movimientos").select("*").order("created_at", desc=True).execute()
     return response.data

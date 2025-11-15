@@ -9,7 +9,7 @@ class Movimiento:
     tipo_movimiento: str  # entrada o salida
     cantidad: int
     motivo: str  # venta, devolucion, reposición, ajuste
-    create_by: Optional[str] = None
+    created_by: Optional[str] = None
     fecha: datetime
     created_at: datetime
     modified_at: datetime
