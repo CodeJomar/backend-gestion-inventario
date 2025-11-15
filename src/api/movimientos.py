@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from src.schemas.movimiento import MovimientoCreate, MovimientoOut
 from src.services import movimientos_service
+from src.services.movimientos_service import descargar_pdf_movimiento
 from src.core.auth import get_current_user, CurrentUser
 
 router = APIRouter(prefix="/movimientos", tags=["Movimientos"])
@@ -16,3 +17,7 @@ def crear_movimiento(mov: MovimientoCreate, current_user: CurrentUser = Depends(
     data = mov.dict()
     data["created_by"] = current_user.email
     return movimientos_service.crear_movimiento(data)
+
+@router.get("/{movimiento_id}/pdf")
+def obtener_pdf(movimiento_id: str):
+    return descargar_pdf_movimiento(movimiento_id)

@@ -2,6 +2,8 @@ from fastapi import HTTPException
 from datetime import datetime
 from src.db.repositories import movimientos_repository, productos_repository
 from src.utils.helpers import calcular_nuevo_stock
+from fastapi.responses import StreamingResponse
+from src.utils.pdf_generator import generar_pdf_movimiento
 
 def listar_movimientos():
     return movimientos_repository.listar_movimientos()
@@ -46,3 +48,24 @@ def crear_movimiento(data: dict):
         "nuevo_stock": nuevo_stock,
         "movimiento": movimiento
     }
+
+def descargar_pdf_movimiento(movimiento_id: str):
+    movimiento = movimientos_repository.obtener_movimiento_por_id(movimiento_id)
+    if not movimiento:
+        raise HTTPException(status_code=404, detail="Movimiento no encontrado")
+
+    producto = productos_repository.obtener_producto(movimiento["producto_id"])
+    if not producto:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+
+    pdf_stream = generar_pdf_movimiento(movimiento, producto)
+
+    filename = f"movimiento_{movimiento_id}.pdf"
+
+    return StreamingResponse(
+        pdf_stream,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"attachment; filename={filename}"
+        },
+    )
