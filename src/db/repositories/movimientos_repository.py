@@ -18,3 +18,15 @@ def crear_movimiento(data: dict):
 def listar_movimientos():
     response = supabase.table("movimientos").select("*").order("created_at", desc=True).execute()
     return response.data
+
+def obtener_movimiento_por_id(movimiento_id: str):
+    res = supabase.table("movimientos") \
+        .select("*, productos(nombre, precio)") \
+        .eq("id", movimiento_id) \
+        .single() \
+        .execute()
+
+    if not res.data:
+        return None
+
+    return res.data
