@@ -59,3 +59,9 @@ def desactivar_producto(id: str):
 
 def reactivar_producto(id: str):
     return supabase.table("productos").update({"estado": True}).eq("id", id).execute().data
+
+def listar_productos_activos():
+    return (supabase.table("productos").select("*").eq("estado", True).order("created_at", desc=True).execute().data)
+
+def listar_productos_inactivos():
+    return (supabase.table("productos").select("*").eq("estado", False).order("created_at", desc=True).execute().data)

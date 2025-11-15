@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from src.core.cors import configurar_cors
 from src.core.config import settings
-from src.api import productos, movimientos, usuarios, auth
+from src.api import productos, movimientos, usuarios, auth, reportes
 
 
 app = FastAPI(title=settings.PROJECT_NAME)
 configurar_cors(app)
 
-routes = [productos, movimientos, usuarios, auth]
+routes = [productos, movimientos, usuarios, auth, reportes]
 for r in routes:
     app.include_router(r.router)
 

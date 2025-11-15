@@ -30,3 +30,23 @@ def obtener_movimiento_por_id(movimiento_id: str):
         return None
 
     return res.data
+
+def listar_entradas_completo():
+    return (
+        supabase.table("movimientos")
+        .select("*, productos(nombre, precio)")
+        .eq("tipo_movimiento", "entrada")
+        .order("created_at", desc=True)
+        .execute()
+        .data
+    )
+
+def listar_salidas_completo():
+    return (
+        supabase.table("movimientos")
+        .select("*, productos(nombre, precio)")
+        .eq("tipo_movimiento", "salida")
+        .order("created_at", desc=True)
+        .execute()
+        .data
+    )
