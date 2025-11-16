@@ -68,7 +68,7 @@ def generar_pdf_movimiento(movimiento, producto):
 
     header_data = [[
         Paragraph("", styles["Normal"]),
-        Paragraph("Recibo de Pago", title_style),
+        Paragraph("DETALLE - MOV", title_style),
         Paragraph("", styles["Normal"]),
     ]]
     
