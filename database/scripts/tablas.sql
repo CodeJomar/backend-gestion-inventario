@@ -53,14 +53,8 @@ CREATE TABLE public.productos (
     updated_by uuid REFERENCES auth.users(id),
     modified_by uuid REFERENCES auth.users(id),
     created_at timestamptz DEFAULT timezone('utc', now()),
-    updated_at timestamptz DEFAULT timezone('utc', now()),
     modified_at timestamptz DEFAULT timezone('utc', now()),
     estado BOOLEAN DEFAULT TRUE NOT NULL,
-    CONSTRAINT productos_pkey PRIMARY KEY (id)
-    CONSTRAINT perfiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id),
-    CONSTRAINT perfiles_creado_por_fkey FOREIGN KEY (creado_por) REFERENCES auth.users(id),
-    CONSTRAINT perfiles_actualizado_por_fkey FOREIGN KEY (actualizado_por) REFERENCES auth.users(id),
-    CONSTRAINT perfiles_eliminado_por_fkey FOREIGN KEY (eliminado_por) REFERENCES auth.users(id)
 );
 
 -- ----------------------------
